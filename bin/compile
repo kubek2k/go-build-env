@@ -107,4 +107,8 @@ then
     echo -n "       Installing Bazaar..."
     pip install bzr > /dev/null 2>&1
     echo " done"
+
+    echo -n "       Making virtualenv relocatable"
+    virtualenv --relocatable $venv > /dev/null 2>&1
+    echo " done"
 fi
