@@ -96,7 +96,7 @@ then
     echo
 
     echo -n "       Installing Virtualenv..."
-    virtualenv --relocatable --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
+    virtualenv --python $python --distribute --never-download --prompt='(venv) --relocatable ' $venv
     . $venv/bin/activate > /dev/null 2>&1
     echo " done"
 
