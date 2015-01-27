@@ -81,13 +81,13 @@ else
 fi
 
 mkdir -p $build/bin
-cp -R $cache/$ver/go $build/
+cp -R $cache/$ver/go $build/.go
 
 GOBIN=$build/bin
-GOROOT=$build/go
+GOROOT=$build/.go
 PATH=$GOROOT/bin:$PATH
 
 mkdir -p $build/.profile.d
-echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
+echo 'PATH=$PATH:$HOME/.go/bin' > $build/.profile.d/go.sh
 echo "GOBIN=$GOBIN" >> $build/.profile.d/go.sh
 echo "GOROOT=$GOROOT" >> $build/.profile.d/go.sh
