@@ -10,4 +10,4 @@ heroku config:set BUILDPACK_URL=https://github.com/kubek2k/go-build-env
 
 ## Origins
 
-This is a rewrite of a Heroku Go buildpack from @kr: https://github.com/kr/heroku-buildpack-go
+This is a rewrite of a Heroku Go buildpack from @kr : https://github.com/kr/heroku-buildpack-go
