@@ -97,63 +97,13 @@ else
 fi
 
 mkdir -p $build/bin
-GOBIN=$build/bin export GOBIN
-GOROOT=$cache/$ver/go export GOROOT
-GOPATH=$build/.heroku/g export GOPATH
+cp -R $cache/$ver/go $build/
+
+GOBIN=$build/bin
+GOROOT=$build/go
 PATH=$GOROOT/bin:$PATH
-
-
-if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
-then
-    echo
-    echo "       Tired of waiting for bzr and hg?"
-    echo "       Try github.com/kr/godep for faster deploys."
-    echo
-
-    echo -n "       Installing Virtualenv..."
-    virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
-    . $venv/bin/activate > /dev/null 2>&1
-    echo " done"
-
-    echo -n "       Installing Mercurial..."
-    pip install mercurial > /dev/null 2>&1
-    echo " done"
-
-    echo -n "       Installing Bazaar..."
-    pip install bzr > /dev/null 2>&1
-    echo " done"
-fi
-
-p=$GOPATH/src/$name
-mkdir -p $p
-cp -R $build/* $p
-
-# allow apps to specify cgo flags and set up /app symlink so things like CGO_CFLAGS=-I/app/... work
-env_dir="$3"
-if [ -d "$env_dir" ]
-then
-    ln -sfn $build /app/code
-    for key in CGO_CFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_LDFLAGS
-    do
-        if [ -f "$env_dir/$key" ]
-        then
-            export "$key=$(cat "$env_dir/$key")"
-        fi
-    done
-fi
-
-unset GIT_DIR # unset git dir or it will mess with goinstall
-cd $p
-if test -e $build/Godeps
-then
-    echo "-----> Running: godep go install -tags heroku ./..."
-    godep go install -tags heroku ./...
-else
-    echo "-----> Running: go get -tags heroku ./..."
-    go get -tags heroku ./...
-fi
-
-rm -rf $build/.heroku
 
 mkdir -p $build/.profile.d
 echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
+echo "GOBIN=$GOBIN" >> $build/.profile.d/go.sh
+echo "GOROOT=$GOROOT" >> $build/.profile.d/go.sh
