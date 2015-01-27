@@ -86,5 +86,4 @@ cp -R $cache/$ver/go $build/.go
 mkdir -p $build/.profile.d
 echo 'PATH=$PATH:$HOME/.go/bin' > $build/.profile.d/go.sh
 echo 'GOROOT=$HOME/.go/ export GOROOT' >> $build/.profile.d/go.sh
-mkdir -p $build/.gopath
-echo 'GOPATH=$HOME/.gopath/:$HOME export GOPATH' >> $build/.profile.d/go.sh
+echo 'GOPATH=$HOME export GOPATH' >> $build/.profile.d/go.sh
