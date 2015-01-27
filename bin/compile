@@ -46,7 +46,7 @@ fi
 plat=$(uname|tr A-Z a-z)-$arch
 
 # Python
-venv=$cache/venv
+venv=$build/.venv
 mkdir -p $cache/pip
 python=python2.7
 PATH=$buildpack/$plat/bin:$venv/bin:$PATH
@@ -84,6 +84,27 @@ mkdir -p $build/bin
 cp -R $cache/$ver/go $build/.go
 
 mkdir -p $build/.profile.d
-echo 'PATH=$PATH:$HOME/.go/bin' > $build/.profile.d/go.sh
+echo 'PATH=$PATH:$HOME/.go/bin:$HOME/.venv/bin' > $build/.profile.d/go.sh
 echo 'GOROOT=$HOME/.go/ export GOROOT' >> $build/.profile.d/go.sh
 echo 'GOPATH=$HOME export GOPATH' >> $build/.profile.d/go.sh
+
+if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
+then
+    echo
+    echo "       Tired of waiting for bzr and hg?"
+    echo "       Try github.com/kr/godep for faster deploys."
+    echo
+
+    echo -n "       Installing Virtualenv..."
+    virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
+    . $venv/bin/activate > /dev/null 2>&1
+    echo " done"
+
+    echo -n "       Installing Mercurial..."
+    pip install mercurial > /dev/null 2>&1
+    echo " done"
+
+    echo -n "       Installing Bazaar..."
+    pip install bzr > /dev/null 2>&1
+    echo " done"
+fi
